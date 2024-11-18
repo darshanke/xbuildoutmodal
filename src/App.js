@@ -1,108 +1,122 @@
 import "./App.css";
-import react, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 function App() {
-  const [modalStatus, setModalDetials] = useState(false);
+  const [modalStatus, setModalDetails] = useState(false);
   const [form, setForm] = useState({
     userName: "",
     emailAddress: "",
     phoneNumber: "",
     DateofBirth: "",
   });
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    let date = new Date();
-    const formDate = new Date(form.DateofBirth);
-    console.log(form.DateofBirth);
-   if(form.phoneNumber.length <=9){
-      window.alert("Invalid phone number. Please enter 10-digit phone number");
+
+    // Validate Email
+    if (!form.emailAddress.includes("@")) {
+      window.alert("Invalid email. Please check your email address.");
       return;
-   }
-   if(formDate>date){
-    window.alert("Invalid date of birth. Date of birth cannot be in the future");
-    return;
-   }
-   setForm({
-    userName: "",
-    emailAddress: "",
-    phoneNumber: "",
-    DateofBirth: "",
-   })
-   setModalDetials(false);
+    }
+
+    // Validate Phone Number
+    if (form.phoneNumber.length !== 10) {
+      window.alert("Invalid phone number. Please enter a 10-digit phone number.");
+      return;
+    }
+
+    // Validate Date of Birth
+    const currentDate = new Date();
+    const formDate = new Date(form.DateofBirth);
+    if (formDate > currentDate) {
+      window.alert("Invalid date of birth. Date of birth cannot be in the future.");
+      return;
+    }
+
+    // Form reset after successful submission
+    setForm({
+      userName: "",
+      emailAddress: "",
+      phoneNumber: "",
+      DateofBirth: "",
+    });
+    setModalDetails(false); // Close modal
   };
+
   const handleChange = (e) => {
-    let { name, value } = e.target;
-    console.log(value);
+    const { name, value } = e.target;
     setForm({ ...form, [name]: value });
   };
-  useEffect(()=>{
 
-  },[form])
+  const closeModalOnOutsideClick = (e) => {
+    if (e.target.className === "modal") {
+      setModalDetails(false);
+    }
+  };
+
   return (
     <div className="App">
       <h1>User Details Modal</h1>
-      <button style={{background: 'blue', color: 'white'}}
-        onClick={() => {
-          setModalDetials(true);
-        }}
+      <button
+        style={{ background: "blue", color: "white" }}
+        onClick={() => setModalDetails(true)}
       >
         Open Form
       </button>
 
       {modalStatus && (
-        <div className="modal">
+        <div className="modal" onClick={closeModalOnOutsideClick}>
           <div className="modal-content">
-           
-            <form onSubmit={(e) => handleSubmit(e)}>
-            <h1>Fill Details</h1>
+            <form onSubmit={handleSubmit}>
+              <h1>Fill Details</h1>
+
               <label htmlFor="username">Username:</label>
-   
               <input
                 type="text"
-                placeholder=""
                 id="username"
                 name="userName"
                 required
                 value={form.userName}
                 onChange={handleChange}
               />
-               <br />
+              <br />
+
               <label htmlFor="email">Email Address:</label>
               <input
-                type='email'
-                id='email'
-                placeholder=""
-                required
+                type="email"
+                id="email"
                 name="emailAddress"
+                required
                 value={form.emailAddress}
                 onChange={handleChange}
               />
-               <br />
+              <br />
+
               <label htmlFor="phone">Phone Number:</label>
-     
               <input
                 type="number"
-                placeholder=""
-                required
-                id='phone'
+                id="phone"
                 name="phoneNumber"
+                required
                 value={form.phoneNumber}
                 onChange={handleChange}
               />
-               <br />
-              <label htmlFor="DateofBirth">Date of Birth:</label>
-       
+              <br />
+
+              <label htmlFor="dob">Date of Birth:</label>
               <input
                 type="date"
-                placeholder=""
-                required
+                id="dob"
                 name="DateofBirth"
+                required
                 value={form.DateofBirth}
                 onChange={handleChange}
               />
-               <br />
-              <button type="submit" style={{background: 'blue' , color: "white"}}>Submit</button>
-            
+              <br />
+
+              <button type="submit" className="submit-button" style={{ background: "blue", color: "white" }}>
+                Submit
+              </button>
             </form>
           </div>
         </div>
