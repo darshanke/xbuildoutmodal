@@ -15,13 +15,11 @@ function App() {
     const formDate = new Date(form.DateofBirth);
     console.log(form.DateofBirth);
    if(form.phoneNumber.length <=9){
-      window.alert("invalid phone number. Please enter 10-digit phone number");
+      window.alert("Invalid phone number. Please enter 10-digit phone number");
       return;
    }
-   if(formDate<=date){
-    console.log("less")
-   }else{
-    window.alert("invalid date of birth. Date of birth cannot be in the future");
+   if(formDate>date){
+    window.alert("Invalid date of birth. Date of birth cannot be in the future");
     return;
    }
    setForm({
